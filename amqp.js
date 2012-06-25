@@ -86,7 +86,7 @@ var classes = {};
 
 (function () { // anon scope for init
   //debug("initializing amqp methods...");
-  protocol = require('./amqp-definitions-0-9-1');
+  protocol = require('./amqp-extended-definitions-0-9-1.js');
 
   for (var i = 0; i < protocol.classes.length; i++) {
     var classInfo = protocol.classes[i];
@@ -1434,6 +1434,17 @@ Message.prototype.acknowledge = function (all) {
 Message.prototype.reject = function (requeue){
 	this.queue.connection._sendMethod(this.queue.channel, methods.basicReject,
 			{ deliveryTag: this.deliveryTag
+			, requeue: requeue ? true : false
+			});
+}
+
+// Reject one or more incoming messages.
+// Set first arg to 'true' to reject this and all previous messages
+// Set second arg to 'true' to requeue the rejected message(s).
+Message.prototype.nack = function (multiple,requeue){
+	this.queue.connection._sendMethod(this.queue.channel, methods.basicNack,
+			{ deliveryTag: this.deliveryTag
+			, multiple: multiple ? true : false
 			, requeue: requeue ? true : false
 			});
 }
