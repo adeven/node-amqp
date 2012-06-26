@@ -910,7 +910,6 @@ function Connection (connectionArgs, options, readyCallback) {
 
     parser.onHeartBeat = function () {
       self.emit("heartbeat");
-      self.heartbeat();
       debug("heartbeat");
     };
 
